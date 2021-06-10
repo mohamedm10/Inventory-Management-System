@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+
+{% block meta %}
+<!-- meta element to capture jinja -->
+<!-- <meta id="labels_data" data-labels={{pie_labels}}> -->
+{% endblock %}
+{% block title %} Dashboard {% endblock %}
+
+{% block content %}
+    <!-- main content -->
+    <div class="container mt-5">
+      <div class="row">
+        <div class="col-3" >
+          <!-- Sidebar -->
+         
+          {% include "sidebar.html" %}
+
+        
+        <!-- sidebar end -->
+      </div>
+        <div class="col-md-9 col-sm-6 p-4" > 
+          <!-- Analytics -->
+          <!-- Cards -->
+          <div class="row">
+            <!-- use text-light and bg-success classes on the cards -->
+            <div class="col col-lg-4 col-md-4 col-sm-12">
+              <div class="card" style="width: 16rem;">
+              <div class="card-body">
+                <h5 class="card-title">Inventories</h5>
+                <p class="card-text"> {{inv[0]}} </p>
+              </div>
+            </div>
+          </div>
+
+            <div class="col col-lg-4 col-md-4 col-sm-12">
+              <div class="card" style="width: 16rem;">               
+                <div class="card-body">
+                  <h5 class="card-title">Sales</h5>
+                  <p class="card-text"> {{sls[0]}} </p>                 
+                </div>
+              </div>
+            </div>
+
+            <div class="col col-lg-4 col-md-4 col-sm-12">
+              <div class="card" style="width: 16rem;">                
+                <div class="card-body">
+                  <h5 class="card-title">Users</h5>
+                  <p class="card-text">5</p>                  
+                </div>
+              </div>
+            </div>
+
+          </div>
+          <div class="row">
+            
+            <div class="col mt-4">Visualisation1
+              <canvas id="myChart" width="400" height="400"></canvas>
+            </div>
+            <div class="col mt-4">Visualisation2
+              <canvas id="pie-chart" width="200" height="200"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- charts scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- bar chart -->
+    <script>
+      var ctx = document.getElementById('myChart').getContext('2d');
+      var myChart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+              labels: {{ bar_labels | tojson}},
+              datasets: [{
+                  label: 'Sales per Inventory',
+                  data: {{ bar_values | tojson}},
+                  backgroundColor: [
+                      'rgba(255, 99, 132, 0.2)',
+                      'rgba(54, 162, 235, 0.2)',
+                      'rgba(255, 206, 86, 0.2)',
+                      'rgba(75, 192, 192, 0.2)',
+                      'rgba(153, 102, 255, 0.2)',
+                      'rgba(255, 159, 64, 0.2)'
+                  ],
+                  borderColor: [
+                      'rgba(255, 99, 132, 1)',
+                      'rgba(54, 162, 235, 1)',
+                      'rgba(255, 206, 86, 1)',
+                      'rgba(75, 192, 192, 1)',
+                      'rgba(153, 102, 255, 1)',
+                      'rgba(255, 159, 64, 1)'
+                  ],
+                  borderWidth: 1
+              }]
+          },
+          options: {
+              scales: {
+                  y: {
+                      beginAtZero: true
+                  }
+              }
+          }
+      });
+      </script>
+      <!-- pie chart -->
+      <script>
+            // labelsData contains the jinja values that were passed into the meta element  
+            //var labelsData=document.getElementById("labels_data").dataset.labels; 
+
+            new Chart(document.getElementById("pie-chart"), {
+              type: 'pie',
+              data: {
+                labels:  {{ pie_labels | tojson}},
+                datasets: [{
+                  label: "Portfolio distribution",
+                  backgroundColor: ["#3e95cd", "#8e5ea2"],
+                  data: {{ pie_values | tojson}}
+                  
+                }]
+              },
+              options: {
+                title: {
+                  display: true,
+                  text: 'Composition of investments.'
+                }
+              }
+          });
+      </script>
+      <!-- scripts end -->
+{% endblock %}

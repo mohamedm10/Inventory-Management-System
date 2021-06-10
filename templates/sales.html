@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %} Sales {% endblock %}
+
+{% block content %}
+
+    <!-- main container -->
+    <div class="container mt-5">
+        <div class="row">
+             <!-- Sidebar start-->
+          <div class="col-3" >
+
+            {% include "sidebar.html" %}
+            
+          </div>
+          <!-- sidebar end -->
+          <!-- main col start -->
+          <div class="col-md-9 col-sm-6 p-4">
+              <!-- table start -->
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th>ID</th>
+                        <th>Product</th>
+                        <th>Quantity Sold</th>
+                        <th>Entry Date</th>
+                        <!-- <th>Loss</th> -->
+                        <!-- <th>Revenue</th> -->
+                        <!-- <th>Profit</th> -->
+                    </tr>
+                </thead>
+                <tbody>
+                  {% for data in d %}
+                  <tr>
+                    <td> {{loop.index}} </td>
+                    <td> {{data[0]}} </td>
+                    <td> {{data[1]}} </td>
+                    <td> {{data[2]}} </td>
+                    <td> {{data[3]}} </td>
+                    <td> {{data[4]}} </td>
+                    <td> {{data[5]}} </td>
+                    <td> {{data[6]}} </td>
+                    <td> {{data[7]}} </td>
+                  </tr>
+                  {% endfor %}
+                  <!-- table2 inside table1
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th>#</th> 
+                        <th>First name</th>
+                        <th>Last name</th>
+                        <th>Date of Birth</th>
+                        <th>Gender</th>
+                      </tr>
+                    </thead>
+                    <tbody> -->
+                      <!-- loop -->                    
+                  <!-- {% for i in names %}
+                  
+                      <tr>
+                      <td> {{loop.index}} </td>
+                      <td> {{i['Firstnm']}} </td>
+                      <td> {{i['Lastnm']}} </td>
+                      <td> {{i['dob']}} </td>
+                      <td> {{i['gender']}} </td>
+                    </tr>
+                    
+                    {% endfor %} -->
+                    <!-- end of loop -->
+                    </tbody>
+                  </table>
+            <!-- table end -->
+          </div>
+        </div>
+      </div>
+      <!-- page container end -->
+
+      {% endblock %}

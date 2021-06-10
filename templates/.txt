@@ -1,0 +1,9 @@
+FORM ESSENTIALS
+
+1. action attribute > form element
+
+2. method attribute > form element
+
+3. name attribute > input element
+
+4. value attribute > input element

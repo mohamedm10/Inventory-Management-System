@@ -1,0 +1,248 @@
+{% extends "base.html" %}
+
+{% block title %} Inventories {% endblock %}
+
+{% block content %}
+      <!-- main container start -->
+      <div class="container mt-5">
+        <div class="row">
+          
+          <div class="col-3">  
+            <!-- Sidebar -->       
+              
+            {% include "sidebar.html" %}
+
+            <!-- sidebar end -->
+          </div>
+          
+          <div class="col-9" > 
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#exampleModal" style="margin-left: 250px;">
+          Add Inventory
+        </button>
+        <!-- Add inventory Modal with forms -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <form action="/inventories" method="POST">
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">Name</label>
+                    <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="text" name="name">
+                  </div>
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">Quantity</label>
+                    <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="text" name="stock_quantity">
+                  </div>
+                  <div class="form-group">
+                    <label for="exampleFormControlSelect1">Select Category</label>
+                    <select class="form-control" id="exampleFormControlSelect1" name="category">
+                      <option value="product">Product</option>
+                      <option value="service">Service</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="exampleInputPassword1">Buying price</label>
+                    <input type="text" class="form-control" id="exampleInputPassword1" placeholder="Text" name="buying_price">
+                  </div>
+                  <div class="form-group">
+                    <label for="exampleInputPassword1">Selling price</label>
+                    <input type="text" class="form-control" id="exampleInputPassword1" placeholder="Text" name="selling_price">
+                  </div>
+                  <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Add inventory Modal with forms end -->
+            
+            <!-- inventory table -->
+             <!--class = display and id = table_id for datatable plugin -->
+            <table class="table" class="display" id="table_id">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">ID</th>
+                  <th scope="col">NAME</th>
+                  <th scope="col">B.P</th>
+                  <th scope="col">S.P</th>
+                  <th scope="col">QUANTITY</th>
+                  <th scope="col">CATEGORY</th>
+                  <th scope="col">Sale <i class="fa fa-usd" aria-hidden="true"></i></th>
+                  <th scope="col">Edit <img src="/static/images/pencil.svg" alt="edit"></th>
+                  <th scope="col">Delete <img src="/static/images/trash.svg" alt="delete"></th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for i in x %}
+                <tr> 
+                  <th scope="row"> {{loop.index}} </th>
+                  <td> {{i[0]}} </td>
+                  <td> {{i[1]}} </td>
+                  <td> {{i[2]}} </td>
+                  <td> {{i[3]}} </td>
+                  <td> {{i[4]}} </td>
+                  <td> {{i[5]}} </td>
+                  <td>
+                      <!-- Button to trigger modal -->
+                      <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#SaleModal{{i[0]}}">
+                        <i class="fa fa-usd" aria-hidden="true"></i>
+                      </button>
+                      <!-- Sale Modal -->
+                  <div class="modal fade" id="SaleModal{{i[0]}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                          <form action="/make_sale" method="POST"> 
+                          <div class="form-group">
+                            <label for="exampleInputPassword1">Product Name : {{ i[1]}} </label>
+                            <input type="text" class="form-control" id="exampleInputPassword1" value="{{i[0]}}" name="product_id">
+                          </div>
+                          <div class="form-group">
+                            <label for="exampleInputPassword1">Quantity</label>
+                            <input type="text" class="form-control" id="exampleInputPassword1" placeholder="Enter Quantity here" name="stock_quantity">
+                          </div>
+                          <button type="submit" class="btn btn-primary">Submit</button>
+                        </form>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                          <button type="button" class="btn btn-primary">Save changes</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  </td>
+                  <td> 
+                    <!-- Button to trigger modal -->
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#EditModal{{i[0]}}"></button>
+                      <!-- Edit Modal -->
+                      <div class="modal fade" id="EditModal{{i[0]}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div class="modal-body">
+                              <form action="/edit_sales" method="POST"> 
+                                <div class="form-group">
+                                  <label for="exampleInputPassword1">Product Id  </label>
+                                  <input type="text" class="form-control" id="exampleInputPassword1" value="{{i[0]}}" name="id">
+                                </div>
+                                <div class="form-group">
+                                  <label for="exampleInputPassword1">Product Name  </label>
+                                  <input type="text" class="form-control" id="exampleInputPassword1" value="{{i[1]}}" name="name">
+                                </div>
+                                <div class="form-group">
+                                  <label for="exampleInputPassword1">BP  </label>
+                                  <input type="text" class="form-control" id="exampleInputPassword1" value="{{i[2]}}" name="buying_price">
+                                </div>
+                                <div class="form-group">
+                                  <label for="exampleInputPassword1">SP  </label>
+                                  <input type="text" class="form-control" id="exampleInputPassword1" value="{{i[3]}}" name="selling_price">
+                                </div>
+                                <div class="form-group">
+                                  <label for="exampleInputPassword1">Quantity  </label>
+                                  <input type="text" class="form-control" id="exampleInputPassword1" value="{{i[4]}}" name="quantity">
+                                </div>
+                                <div class="form-group">
+                                  <label for="exampleFormControlSelect1">Select Category</label>
+                                  <select class="form-control" id="exampleFormControlSelect1" value="{{i[5]}}" name="category">
+                                    <option value="product">Product</option>
+                                    <option value="service">Service</option>
+                                  </select>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                              </form>
+                            </div>
+                            <div class="modal-footer">
+                              <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                              <button type="button" class="btn btn-primary">Save changes</button> -->
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                  </td>
+                  <td>
+                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#DeleteModal">
+                      <i class="fa fa-usd" aria-hidden="true"></i>
+                  </td>
+                </tr>
+                {% endfor %}
+
+              </tbody>
+            </table>
+            <!-- table end -->
+              <!-- Modals -->
+            
+            <!-- Addnew Modal -->
+            <!-- <div class="modal fade" id="AddnewModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="form-group">
+                      <label for="exampleInputPassword1">Data title</label>
+                      <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Enter values here">
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                  </div>
+                </div>
+              </div>
+            </div> -->
+            <!-- Delete Modal -->
+            <div class="modal fade" id="DeleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    Are you sure you want to delete!!!
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Modals end -->
+            
+            </div>
+          </div>
+        </div>
+        <!-- main container end -->
+
+      {% endblock %}

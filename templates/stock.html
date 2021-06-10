@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %} Stock {% endblock %}
+
+{% block content %}
+    <!-- main container -->
+    <div class="container mt-5">
+        <div class="row">
+            <!-- Sidebar -->
+          <div class="col-3" >
+
+            {% include "sidebar.html" %}
+
+          </div>
+          <!-- sidebar end -->
+          <!-- main col start -->
+          <div class="col-md-9 col-sm-6 p-4">
+               <!--table start  -->
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Inventory</th>
+                        <th scope="col">Quantity</th>
+                        <th scope="col">Entry Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th scope="row">1</th>
+                        <td>..</td>
+                        <td>..</td>
+                        <td>..</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">2</th>
+                        <td>..</td>
+                        <td>..</td>
+                        <td>..</td>
+                    </tr>
+                </tbody>
+            </table>
+           <!-- table end -->
+          
+          </div>
+        </div>
+      </div>
+
+      {% endblock %}
+

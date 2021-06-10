@@ -1,0 +1,25 @@
+body {
+    background-color: whitesmoke;
+}
+
+
+.row {
+    
+    margin: 0px 0px;
+    height: 0px 0px;
+}
+
+.card-body {
+    background-color: rgb(47, 128, 0);
+    color: white;
+}
+
+.card-body > h5 {
+    border-bottom: 1px solid white;
+}
+
+/* side bar nav */
+.container ul li {
+    background-color: #343a40;
+    color: red
+}

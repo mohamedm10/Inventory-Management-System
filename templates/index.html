@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %} Home {% endblock %}
+
+{% block content %}
+    <ul>
+      {% for each in usrs %}
+      <li>{{ each }}</li>
+      {% endfor %}
+    </ul>
+    <!-- conditional display a message -->
+    {% if age > 18 %}
+    <h1 style="color: green">Over 18</h1>
+    {% else %}
+    <h1 style="color: red">Under 18</h1>
+    {% endif %}
+
+    <!-- main container -->
+    <div class="container mt-5 bg-primary" style="border: 1px black solid;">
+      <div class="row align-items-center">
+        <div class="col mt-5"> 
+          <h1>Track your Inventory</h1>
+          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Provident itaque tempora molestias corporis sequi voluptatibus!</p>
+        </div>
+        <div class="col mt-5"> 
+          <img src="/static/images/stock.jpg" width="600" height="300" class="img-fluid" alt="Responsive image">
+        </div>
+        
+
+      </div>
+
+
+    </div>
+    <!-- main container end -->
+ {% endblock %}
