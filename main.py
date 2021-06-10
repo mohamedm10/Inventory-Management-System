@@ -106,7 +106,7 @@ def single_inventories(inventory_id):
 
 @app.route('/sales', methods=['POST','GET'])
 def sales():
-    cur.execute("SELECT * FROM sales INNER JOIN products ON products.id = sales.product_id;")
+    cur.execute("SELECT sales.id, product_id, quantity_sold, date_sold, name FROM sales INNER JOIN products ON products.id = sales.product_id;")
     d = cur.fetchall()
     print(d)
     return render_template('sales.html',d=d)
