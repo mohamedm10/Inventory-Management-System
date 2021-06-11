@@ -8,7 +8,7 @@ app.config.from_object(Staging)
 
 import psycopg2  
 # conn = psycopg2.connect("dbname=kiosk user=postgres port=5433 password=12345") #connection to local 
-conn = psycopg2.connect("dbname=d5c04cvapeivr1 user=ruusozkswdaiez port=5432 password=c9424fa337795052a1500084fa6b4442d12b3977458eeac2bba5a2300964783b") #connection to heroku db
+conn = psycopg2.connect(dbname="d5c04cvapeivr1", host="ec2-79-125-30-28.eu-west-1.compute.amazonaws.com", user="ruusozkswdaiez", port=5432,  password="c9424fa337795052a1500084fa6b4442d12b3977458eeac2bba5a2300964783b") #connection to heroku db
 cur = conn.cursor()
 
 
