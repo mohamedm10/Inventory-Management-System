@@ -1,11 +1,14 @@
 from flask import Flask, request, render_template, redirect, url_for
 from flask import json , render_template
-from configs.base_config import Development
+from configs.base_config import Development, Staging
 from werkzeug.utils import redirect
+
 app = Flask(__name__)
+app.config.from_object(Staging)
 
 import psycopg2  
-conn = psycopg2.connect("dbname=kiosk user=postgres port=5433 password=12345") #connection to db
+# conn = psycopg2.connect("dbname=kiosk user=postgres port=5433 password=12345") #connection to local 
+conn = psycopg2.connect("dbname=d5c04cvapeivr1 user=ruusozkswdaiez port=5432 password=c9424fa337795052a1500084fa6b4442d12b3977458eeac2bba5a2300964783b") #connection to heroku db
 cur = conn.cursor()
 
 
@@ -106,7 +109,7 @@ def single_inventories(inventory_id):
 
 @app.route('/sales', methods=['POST','GET'])
 def sales():
-    cur.execute("SELECT sales.id, product_id, quantity_sold, date_sold, name FROM sales INNER JOIN products ON products.id = sales.product_id;")
+    cur.execute("SELECT sales.id, product_id, quantity_sold, date_sold, name, selling_price*quantity_sold as total_sales FROM sales INNER JOIN products ON products.id = sales.product_id;")
     d = cur.fetchall()
     print(d)
     return render_template('sales.html',d=d)

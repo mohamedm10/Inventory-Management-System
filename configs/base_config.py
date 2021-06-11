@@ -8,3 +8,8 @@ class Development(Base):
     DATABASE = os.environ.get("DATABASE")
     POSTGRES_USER = os.environ.get("POSTGRES_USER")
     POSTGRES_PASSWORD = os.environ.get("POSTGRES_PASSWORD")
+
+class Staging(Base):
+    DATABASE = "d5c04cvapeivr1"
+    POSTGRES_USER = "ruusozkswdaiez"
+    POSTGRES_PASSWORD = "c9424fa337795052a1500084fa6b4442d12b3977458eeac2bba5a2300964783b"
