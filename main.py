@@ -12,13 +12,15 @@ conn = psycopg2.connect(dbname="d5c04cvapeivr1", host="ec2-79-125-30-28.eu-west-
 cur = conn.cursor()
 
 
+
+
 @app.route('/base') #displays the base html content
 def base():
     return render_template('base.html')
 
 @app.route('/')
 def home():
-    username = "Techcamp Kenya"
+    username = "Mohamed's I-M-S"
     users = ['Peter', 'Jane', 'Joe', 'Mark']
     age  = 25
     return render_template('index.html', usr=username, usrs=users, age=age)
