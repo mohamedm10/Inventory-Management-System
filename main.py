@@ -158,7 +158,8 @@ def edit():
         id = request.form['id']
         c = request.form['category']
 
-        edit_inventory = Product.update_by_id(id=id, name=nm, category=c, buying_price=bp, selling_price=sp, stock_quantity=q)
+        edit_inventory = Product(id=id, name=nm, category=c, buying_price=bp, selling_price=sp, stock_quantity=q)
+        edit_inventory.update_by_id()
         print(edit_inventory)
         # cur.execute('UPDATE products SET name = %s, buying_price = %s, selling_price = %s, stock_quantity = %s, category = %s WHERE products.id = %s ;',(nm,bp,sp,q,c,id))
         # conn.commit()
