@@ -2,11 +2,62 @@ from flask import Flask, request, render_template, redirect, url_for
 from flask import json , render_template
 from configs.base_config import Development, Staging
 from werkzeug.utils import redirect
+from flask_sqlalchemy import SQLAlchemy
+import psycopg2
 
 app = Flask(__name__)
-app.config.from_object(Staging)
+db = SQLAlchemy(app)
+app.config.from_object(Development)
 
-import psycopg2  
+
+
+class Product(db.Model):
+    __tablename__ = "products"
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(), unique=True, nullable=False)
+    category = db.Column(db.String(), nullable=False)
+    buying_price = db.Column(db.Float, nullable=False)
+    selling_price = db.Column(db.Float, nullable=False)
+    stock_quantity = db.Column(db.Integer, nullable=False)
+
+     # fetch all records from database 
+    @classmethod
+    def fetch_records(cls):
+        products = cls.query.all()
+        return products
+
+     # create record 
+    def create_record(self):
+        db.session.add(self)
+        db.session.commit()
+
+    # update by id
+    @classmethod
+    def update_by_id(cls,id, name=None, category=None, buying_price=None, selling_price=None, stock_quantity=None):
+        record = cls.query.filter_by(id=id).first()
+
+        if record:
+
+            record.name == name
+            record.category == category
+            record.buying_price == buying_price
+            record.selling_price == selling_price
+            record.stock_quantity == stock_quantity
+            db.session.commit()
+            return True
+        else:
+            return False
+
+# create all tables
+@app.before_first_request
+def create_tables():
+    db.create_all()
+    print("hello")
+
+
+
+  
 # conn = psycopg2.connect("dbname=kiosk user=postgres port=5433 password=12345") #connection to local db
 conn = psycopg2.connect(dbname="d5c04cvapeivr1", host="ec2-79-125-30-28.eu-west-1.compute.amazonaws.com", user="ruusozkswdaiez", port=5432,  password="c9424fa337795052a1500084fa6b4442d12b3977458eeac2bba5a2300964783b") #connection to heroku db
 cur = conn.cursor()
@@ -58,19 +109,27 @@ def dashboard():
 @app.route('/inventories',methods=['POST','GET'])
 def inventories():
     if request.method == "GET":
-        cur.execute("SELECT * FROM products;")
-        x = cur.fetchall()
-        return render_template('inventories.html',x=x)
+        # cur.execute("SELECT * FROM products;")
+        # x = cur.fetchall()
+        all_products = Product.fetch_records()
+        print(all_products)
+        return render_template('inventories.html', all_products=all_products )
     else:
-        n = request.form['name']
-        q = request.form['stock_quantity']
-        b = request.form['buying_price']
-        s = request.form['selling_price']
-        c = request.form['category']
+        name = request.form['name']
+        stock_quantity = request.form['stock_quantity']
+        buying_price = request.form['buying_price']
+        selling_price = request.form['selling_price']
+        category = request.form['category']
+        
+        new_product = Product(name=name, stock_quantity=stock_quantity, 
+                            buying_price=buying_price, selling_price=selling_price, category=category)
 
-        print(n,b,s,q,c)
-        cur.execute("INSERT INTO products (name, stock_quantity, buying_price, selling_price,category) VALUES (%s, %s, %s, %s, %s)", (n,q,b,s,c))
-        conn.commit()
+        new_product.create_record()
+        print(new_product)
+
+        # print(n,b,s,q,c)
+        # cur.execute("INSERT INTO products (name, stock_quantity, buying_price, selling_price,category) VALUES (%s, %s, %s, %s, %s)", (n,q,b,s,c))
+        # conn.commit()
         return redirect(url_for('inventories'))
 
 @app.route('/make_sale', methods=['POST','GET']) #is accessed when sale button is clicked
@@ -89,7 +148,7 @@ def make_sale():
         conn.commit()
         return redirect(url_for('sales'))
 
-@app.route('/edit_sales', methods=['POST','GET'])
+@app.route('/edit_inventory', methods=['POST','GET'])
 def edit():
     if request.method == 'POST':
         nm = request.form['name']
@@ -99,8 +158,8 @@ def edit():
         id = request.form['id']
         c = request.form['category']
 
-        cur.execute('UPDATE products SET name = %s, buying_price = %s, selling_price = %s, stock_quantity = %s, category = %s WHERE products.id = %s ;',(nm,bp,sp,q,c,id))
-        conn.commit()
+        # cur.execute('UPDATE products SET name = %s, buying_price = %s, selling_price = %s, stock_quantity = %s, category = %s WHERE products.id = %s ;',(nm,bp,sp,q,c,id))
+        # conn.commit()
         return redirect(url_for('inventories'))
     else:
         return render_template('inventories.html')

@@ -85,15 +85,15 @@
                 </tr>
               </thead>
               <tbody>
-                {% for i in x %}
+                {% for i in all_products %}
                 <tr> 
                   <th scope="row"> {{loop.index}} </th>
-                  <td> {{i[0]}} </td>
-                  <td> {{i[1]}} </td>
-                  <td> {{i[2]}} </td>
-                  <td> {{i[3]}} </td>
-                  <td> {{i[4]}} </td>
-                  <td> {{i[5]}} </td>
+                  <td> {{i.id}} </td>
+                  <td> {{i.name}} </td>
+                  <td> {{i.buying_price}} </td>
+                  <td> {{i.selling_price}} </td>
+                  <td> {{i.stock_quantity}} </td>
+                  <td> {{i.category}} </td>
                   <td>
                       <!-- Button to trigger modal -->
                       <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#SaleModal{{i[0]}}">
