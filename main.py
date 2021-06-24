@@ -7,7 +7,7 @@ import psycopg2
 
 app = Flask(__name__)
 db = SQLAlchemy(app)
-app.config.from_object(Development)
+app.config.from_object(Staging)
 
 
 
@@ -27,14 +27,21 @@ class Product(db.Model):
         products = cls.query.all()
         return products
 
-     # create record 
+    # fetch records id
+    @classmethod
+    def fetch_by_id(cls,id):
+        record = cls.query.filter_by(id=id)    
+        return record
+
+    # create record 
+    @classmethod
     def create_record(self):
         db.session.add(self)
         db.session.commit()
 
     # update by id
     @classmethod
-    def update_by_id(cls,id, name=None, category=None, buying_price=None, selling_price=None, stock_quantity=None):
+    def update_by_id(cls,id, name, category, buying_price, selling_price, stock_quantity):
         record = cls.query.filter_by(id=id).first()
 
         if record:
@@ -44,8 +51,9 @@ class Product(db.Model):
             record.buying_price == buying_price
             record.selling_price == selling_price
             record.stock_quantity == stock_quantity
+            db.session.add(record)
             db.session.commit()
-            return True
+            return record.name
         else:
             return False
 
@@ -148,23 +156,29 @@ def make_sale():
         conn.commit()
         return redirect(url_for('sales'))
 
-@app.route('/edit_inventory', methods=['POST','GET'])
-def edit():
-    if request.method == 'POST':
-        nm = request.form['name']
-        bp = request.form['buying_price']
-        sp = request.form['selling_price']
-        q = request.form['quantity']
-        id = request.form['id']
-        c = request.form['category']
+@app.route('/edit_inventory/<int:id>', methods=['POST','GET'])
+def edit(id):
 
-        edit_inventory = Product(id=id, name=nm, category=c, buying_price=bp, selling_price=sp, stock_quantity=q)
-        edit_inventory.update_by_id()
-        print(edit_inventory)
+    if request.method == 'POST':
+        record = Product.query.filter_by(id=id).first()
+
+        record.name = request.form['name']
+        record.buying_price = request.form['buying_price']
+        record.selling_price = request.form['selling_price']
+        record.stock_quantity = request.form['quantity']
+        record.category = request.form['category']
+
+        db.session.add(record)
+        db.session.commit()
+
+        print('Record successfully added', record.name)
         # cur.execute('UPDATE products SET name = %s, buying_price = %s, selling_price = %s, stock_quantity = %s, category = %s WHERE products.id = %s ;',(nm,bp,sp,q,c,id))
         # conn.commit()
         return redirect(url_for('inventories'))
     else:
+        record_by_id = Product().fetch_by_id(id=id)
+
+
         return render_template('inventories.html')
 
 #inventory with ID
