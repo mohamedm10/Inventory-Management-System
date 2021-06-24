@@ -132,6 +132,8 @@ def inventories():
         new_product = Product(name=None, stock_quantity=None, buying_price=None, selling_price=None, category=None)
 
         new_product.create_record(name=name ,stock_quantity=stock_quantity, buying_price=buying_price, selling_price=selling_price, category=category)
+        db.session.add()
+        db.session.commit()
         print(new_product)
 
         # print(n,b,s,q,c)
