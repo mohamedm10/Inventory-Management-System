@@ -58,10 +58,10 @@ class Product(db.Model):
             return False
 
 # create all tables
-# @app.before_first_request
-# def create_tables():
-#     db.create_all()
-#     print("hello")
+@app.before_first_request
+def create_tables():
+    db.create_all()
+    print("hello")
 
 
 
