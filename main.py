@@ -58,10 +58,10 @@ class Product(db.Model):
             return False
 
 # create all tables
-@app.before_first_request
-def create_tables():
-    db.create_all()
-    print("hello")
+# @app.before_first_request
+# def create_tables():
+#     db.create_all()
+#     print("hello")
 
 
 
@@ -129,7 +129,7 @@ def inventories():
         selling_price = request.form['selling_price']
         category = request.form['category']
         
-        new_product = Product(name=name, stock_quantity=stock_quantity, buying_price=buying_price, selling_price=selling_price, category=category)
+        new_product = Product(name=None, stock_quantity=None, buying_price=None, selling_price=None, category=None)
 
         new_product.create_record(name=name ,stock_quantity=stock_quantity, buying_price=buying_price, selling_price=selling_price, category=category)
         print(new_product)
