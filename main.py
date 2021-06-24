@@ -129,10 +129,9 @@ def inventories():
         selling_price = request.form['selling_price']
         category = request.form['category']
         
-        new_product = Product(name=None, stock_quantity=None, buying_price=None, selling_price=None, category=None)
+        new_product = Product(name=name, stock_quantity=stock_quantity, buying_price=buying_price, selling_price=selling_price, category=category)
 
-        new_product.create_record(name=name ,stock_quantity=stock_quantity, buying_price=buying_price, selling_price=selling_price, category=category)
-        db.session.add()
+        db.session.add(new_product)
         db.session.commit()
         print(new_product)
 
