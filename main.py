@@ -7,7 +7,7 @@ import psycopg2
 
 app = Flask(__name__)
 db = SQLAlchemy(app)
-app.config.from_object(Staging)
+app.config.from_object(Development)
 
 
 
