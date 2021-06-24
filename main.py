@@ -119,7 +119,8 @@ def inventories():
     if request.method == "GET":
         # cur.execute("SELECT * FROM products;")
         # x = cur.fetchall()
-        all_products = Product.fetch_records()
+        # all_products = Product.fetch_records()
+        all_products = Product.query.all()
         print(all_products)
         return render_template('inventories.html', all_products=all_products )
     else:
