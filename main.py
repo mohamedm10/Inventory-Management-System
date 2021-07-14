@@ -70,8 +70,8 @@ def create_tables():
 conn = psycopg2.connect(dbname="d5c04cvapeivr1", host="ec2-79-125-30-28.eu-west-1.compute.amazonaws.com", user="ruusozkswdaiez", port=5432,  password="c9424fa337795052a1500084fa6b4442d12b3977458eeac2bba5a2300964783b") #connection to heroku db
 cur = conn.cursor()
 
-cur.execute("CREATE TABLE IF NOT EXISTS products (id serial PRIMARY KEY, name VARCHAR NOT NULL, buying_price NUMERIC NOT NULL, selling_price NUMERIC NOT NULL, stock_quantity NUMERIC NOT NULL, category VARCHAR NOT NULL);")
-cur.execute("CREATE TABLE IF NOT EXISTS sales (id serial PRIMARY KEY, product_id INTEGER NOT NULL, quantity_sold NUMERIC NOT NULL, date_sold TIMESTAMP );")
+# cur.execute("CREATE TABLE IF NOT EXISTS products (id serial PRIMARY KEY, name VARCHAR NOT NULL, buying_price NUMERIC NOT NULL, selling_price NUMERIC NOT NULL, stock_quantity NUMERIC NOT NULL, category VARCHAR NOT NULL);")
+# cur.execute("CREATE TABLE IF NOT EXISTS sales (id serial PRIMARY KEY, product_id INTEGER NOT NULL, quantity_sold NUMERIC NOT NULL, date_sold TIMESTAMP );")
 
 
 @app.route('/base') #displays the base html content
@@ -119,8 +119,8 @@ def inventories():
     if request.method == "GET":
         # cur.execute("SELECT * FROM products;")
         # x = cur.fetchall()
-        # all_products = Product.fetch_records()
-        all_products = Product.query.all()
+        all_products = Product.fetch_records()
+        # all_products = Product.query.all()
         print(all_products)
         return render_template('inventories.html', all_products=all_products )
     else:
