@@ -15,4 +15,4 @@ class Staging(Base):
     DATABASE = "d5c04cvapeivr1"
     POSTGRES_USER = "ruusozkswdaiez"
     POSTGRES_PASSWORD = "c9424fa337795052a1500084fa6b4442d12b3977458eeac2bba5a2300964783b"
-    SQLALCHEMY_DATABASE_URI = "postgres://ruusozkswdaiez:c9424fa337795052a1500084fa6b4442d12b3977458eeac2bba5a2300964783b@ec2-79-125-30-28.eu-west-1.compute.amazonaws.com:5432/d5c04cvapeivr1"
+    SQLALCHEMY_DATABASE_URI = "postgresql://ruusozkswdaiez:c9424fa337795052a1500084fa6b4442d12b3977458eeac2bba5a2300964783b@ec2-79-125-30-28.eu-west-1.compute.amazonaws.com:5432/d5c04cvapeivr1"
