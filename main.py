@@ -166,9 +166,11 @@ def make_sale():
         # cur.execute("UPDATE products SET stock_quantity =%s WHERE id= %s ", (qt,pid))
         # cur.execute("INSERT INTO sales (product_id, quantity_sold, date_sold) VALUES (%s,%s,'NOW()')", (pid,qt))
         # conn.commit()
-        item_selected = Product.query.filter_by(id=pid)
-        print(item_selected.id)
-
+        item_selected = Sale(product_id=pid,quantity_sold=qt)
+        db.session.add(item_selected)
+        db.session.commit()
+        print(item_selected)
+    
 
         return redirect(url_for('sales'),item_selected=item_selected)
 
@@ -207,8 +209,7 @@ def sales():
     # cur.execute("SELECT sales.id, product_id, quantity_sold, date_sold, name, selling_price*quantity_sold as total_sales FROM sales INNER JOIN products ON products.id = sales.product_id;")
     # d = cur.fetchall()
     sales = Sale.query.all()
-
-
+    
     print(sales)
     return render_template('sales.html',sales=sales)
 

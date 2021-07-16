@@ -20,7 +20,7 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th scope="col">#</th>
+                        <!-- <th scope="col">#</th> -->
                         <th>ID</th>
                         <th>Product ID</th>
                         <th>Quantity Sold</th>
@@ -35,13 +35,13 @@
                 <tbody>
                   {% for sale in sales %}
                   <tr>
-                    <td> {{loop.index}} </td>
-                    <td> {{sale[0]}} </td>
-                    <td> {{sale[1]}} </td>
-                    <td> {{sale[2]}} </td>
-                    <td> {{sale[5]}} </td>
-                    <td> {{sale[3]}} </td>
-                    <td> {{sale[4]}} </td>
+                    <!-- <td> {{loop.index}} </td> -->
+                    <td> {{sale.id}} </td>
+                    <td> {{sale.product_id}} </td>
+                    <td> {{sale.quantity_sold}} </td>
+                    <td> {{sale}} </td>
+                    <td> {{sale.date_sold}} </td>
+                    <td> {{sale}} </td>
                     
                   </tr>
                   {% endfor %}
