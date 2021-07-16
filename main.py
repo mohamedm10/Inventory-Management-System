@@ -4,6 +4,7 @@ from configs.base_config import Development, Staging
 from werkzeug.utils import redirect
 from flask_sqlalchemy import SQLAlchemy
 import psycopg2
+from datetime import datetime
 
 app = Flask(__name__)
 db = SQLAlchemy(app)
@@ -60,7 +61,7 @@ class Product(db.Model):
 class Sale(db.Model):
     __tablename__ = "sales"
 
-    id = db.Column(db.Integer, primarykey = True)
+    id = db.Column(db.Integer, primary_key = True)
     product_id = db.Column(db.Integer, nullable=False)
     quantity_sold = db.Column(db.Float, nullable=False)
     date_sold = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
@@ -151,7 +152,7 @@ def inventories():
         # conn.commit()
         return redirect(url_for('inventories'))
 
-@app.route('/make_sale', methods=['POST','GET']) #is accessed when sale button is clicked
+@app.route('/make_sale', methods=['POST','GET']) #is accessed when sale button is clicked in inventories template
 def make_sale():
     if request.method == 'GET':
         
@@ -165,10 +166,11 @@ def make_sale():
         # cur.execute("UPDATE products SET stock_quantity =%s WHERE id= %s ", (qt,pid))
         # cur.execute("INSERT INTO sales (product_id, quantity_sold, date_sold) VALUES (%s,%s,'NOW()')", (pid,qt))
         # conn.commit()
-        record_sale = Product.query.filter_by(id=pid).first()
+        item_selected = Product.query.filter_by(id=pid)
+        print(item_selected.id)
 
 
-        return redirect(url_for('sales'))
+        return redirect(url_for('sales'),item_selected=item_selected)
 
 @app.route('/edit_inventory/<int:id>', methods=['POST','GET'])
 def edit(id):
@@ -202,10 +204,13 @@ def single_inventories(inventory_id):
 
 @app.route('/sales', methods=['POST','GET'])
 def sales():
-    cur.execute("SELECT sales.id, product_id, quantity_sold, date_sold, name, selling_price*quantity_sold as total_sales FROM sales INNER JOIN products ON products.id = sales.product_id;")
-    d = cur.fetchall()
-    print(d)
-    return render_template('sales.html',d=d)
+    # cur.execute("SELECT sales.id, product_id, quantity_sold, date_sold, name, selling_price*quantity_sold as total_sales FROM sales INNER JOIN products ON products.id = sales.product_id;")
+    # d = cur.fetchall()
+    sales = Sale.query.all()
+
+
+    print(sales)
+    return render_template('sales.html',sales=sales)
 
 @app.route('/users')
 def users():

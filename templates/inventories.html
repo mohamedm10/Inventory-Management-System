@@ -96,11 +96,11 @@
                   <td> {{i.category}} </td>
                   <td>
                       <!-- Button to trigger modal -->
-                      <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#SaleModal{{i[0]}}">
+                      <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#SaleModal{{i.id}}">
                         <span class="fas fa-usd"></span>
                       </button>
                       <!-- Sale Modal -->
-                  <div class="modal fade" id="SaleModal{{i[0]}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                  <div class="modal fade" id="SaleModal{{i.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
                       <div class="modal-content">
                         <div class="modal-header">
@@ -112,8 +112,8 @@
                         <div class="modal-body">
                           <form action="/make_sale" method="POST"> 
                           <div class="form-group">
-                            <label for="exampleInputPassword1">Product Name : {{ i[1]}} </label>
-                            <input type="text" class="form-control" id="exampleInputPassword1" value="{{i[0]}}" name="product_id">
+                            <label for="exampleInputPassword1">Product Name : {{ i.name}} </label>
+                            <input type="text" class="form-control" id="exampleInputPassword1" value="{{i.id}}" name="product_id">
                           </div>
                           <div class="form-group">
                             <label for="exampleInputPassword1">Quantity</label>
