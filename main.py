@@ -64,7 +64,7 @@ class Sale(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     product_id = db.Column(db.Integer, nullable=False)
     quantity_sold = db.Column(db.Float, nullable=False)
-    date_sold = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    date_sold = db.Column(db.DateTime, nullable=False, default=datetime.now)
 
 
 
@@ -77,7 +77,7 @@ def create_tables():
 
 
   
-conn = psycopg2.connect("dbname=kiosk user=postgres port=5433 password=12345") #connection to local db
+# conn = psycopg2.connect("dbname=kiosk user=postgres port=5433 password=12345") #connection to local db
 conn = psycopg2.connect(dbname="d5c04cvapeivr1", host="ec2-79-125-30-28.eu-west-1.compute.amazonaws.com", user="ruusozkswdaiez", port=5432,  password="c9424fa337795052a1500084fa6b4442d12b3977458eeac2bba5a2300964783b") #connection to heroku db
 cur = conn.cursor()
 
@@ -172,7 +172,7 @@ def make_sale():
         print(item_selected)
     
 
-        return redirect(url_for('sales'),item_selected=item_selected)
+        return redirect(url_for('sales'))
 
 @app.route('/edit_inventory/<int:id>', methods=['POST','GET'])
 def edit(id):
@@ -209,7 +209,7 @@ def sales():
     # cur.execute("SELECT sales.id, product_id, quantity_sold, date_sold, name, selling_price*quantity_sold as total_sales FROM sales INNER JOIN products ON products.id = sales.product_id;")
     # d = cur.fetchall()
     sales = Sale.query.all()
-    
+
     print(sales)
     return render_template('sales.html',sales=sales)
 
