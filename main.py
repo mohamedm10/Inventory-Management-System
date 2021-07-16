@@ -57,6 +57,16 @@ class Product(db.Model):
         else:
             return False
 
+class Sale(db.Model):
+    __tablename__ = "sales"
+
+    id = db.Column(db.Integer, primarykey = True)
+    product_id = db.Column(db.Integer, nullable=False)
+    quantity_sold = db.Column(db.Float, nullable=False)
+    date_sold = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+
+
+
 # create all tables
 @app.before_first_request
 def create_tables():
@@ -66,7 +76,7 @@ def create_tables():
 
 
   
-# conn = psycopg2.connect("dbname=kiosk user=postgres port=5433 password=12345") #connection to local db
+conn = psycopg2.connect("dbname=kiosk user=postgres port=5433 password=12345") #connection to local db
 conn = psycopg2.connect(dbname="d5c04cvapeivr1", host="ec2-79-125-30-28.eu-west-1.compute.amazonaws.com", user="ruusozkswdaiez", port=5432,  password="c9424fa337795052a1500084fa6b4442d12b3977458eeac2bba5a2300964783b") #connection to heroku db
 cur = conn.cursor()
 
@@ -152,9 +162,12 @@ def make_sale():
 
         print(pid,qt)
 
-        cur.execute("UPDATE products SET stock_quantity =%s WHERE id= %s ", (qt,pid))
-        cur.execute("INSERT INTO sales (product_id, quantity_sold, date_sold) VALUES (%s,%s,'NOW()')", (pid,qt))
-        conn.commit()
+        # cur.execute("UPDATE products SET stock_quantity =%s WHERE id= %s ", (qt,pid))
+        # cur.execute("INSERT INTO sales (product_id, quantity_sold, date_sold) VALUES (%s,%s,'NOW()')", (pid,qt))
+        # conn.commit()
+        record_sale = Product.query.filter_by(id=pid).first()
+
+
         return redirect(url_for('sales'))
 
 @app.route('/edit_inventory/<int:id>', methods=['POST','GET'])
