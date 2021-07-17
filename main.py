@@ -1,5 +1,6 @@
 from flask import Flask, request, render_template, redirect, url_for
 from flask import json , render_template
+from sqlalchemy.sql.elements import Null
 from configs.base_config import Development, Staging
 from werkzeug.utils import redirect
 from flask_sqlalchemy import SQLAlchemy
@@ -188,6 +189,30 @@ def users():
     all_users = User.query.all()
 
     return render_template('users.html',all_users=all_users)    
+
+@app.route('/add_user', methods=['POST'])
+def add_user():
+    if request.method == 'GET':
+        return render_template('users.html')
+    
+    first_name = request.form['f_name']
+    last_name = request.form['l_name']
+    email = request.form['email']
+    password = request.form['password']
+    confirm_password = request.form['confirm_password']
+
+    user_check = User.query.filter_by(email=email).first()
+    
+    if user_check.email==request.form['email']:
+        
+        return redirect(url_for('users'))
+
+    new_user = User(first_name=first_name, last_name=last_name, email=email, password=password, confirm_password=confirm_password)
+
+    db.session.add(new_user)
+    db.session.commit()
+
+    return redirect(url_for('users'))
 
 @app.route('/users/<int:id>')
 def user_id(id):
