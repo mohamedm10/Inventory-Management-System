@@ -15,24 +15,41 @@
             <!-- Analytics -->
             <!-- Cards -->
             <div class="row">
-              <!-- use text-ligh and bg-success classes on the cards -->
-              <div class="col col-lg-4 col-md-4 col-sm-12">
-                
-            </div>
+              <table class="table table-bordered table-striped table-vcenter js-dataTable-full">
+                <thead>
+                    <tr>
+                        <th class="text-center" style="width: 80px;">ID</th>
+                        <th>First Name</th>
+                        <th class="d-none d-sm-table-cell" style="width: 30%;">Last Name</th>
+                        <th class="d-none d-sm-table-cell" style="width: 15%;">Email</th>
+                        <th style="width: 15%;">Registered</th>
+                    </tr>
+                </thead>
+                <tbody>
+                  {% for user in all_users %}
+                    <tr>
+                        <td class="text-center font-size-sm">{{user.id}}</td>
+                        <td class="font-w600 font-size-sm">
+                            <a href="be_pages_generic_blank.html">{{user.first_name}}</a>
+                        </td>
+                        <td class="d-none d-sm-table-cell font-size-sm">
+                            <em class="text-muted">{{user.last_name}}</em>
+                        </td>
+                        <td class="d-none d-sm-table-cell">
+                            <span class="badge badge-primary">{{user.email}}</span>
+                        </td>
+                        <td>
+                            <em class="text-muted font-size-sm">2 days ago</em>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+
+              </table>
+            
   
-              <div class="col col-lg-4 col-md-4 col-sm-12">
-                
-              </div>
-  
-              <div class="col col-lg-4 col-md-4 col-sm-12">
-                
-              </div>
-  
             </div>
-            <div class="row">
-              
-              
-            </div>
+            
           </div>
         </div>
       </div>

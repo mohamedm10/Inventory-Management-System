@@ -22,42 +22,6 @@ class Product(db.Model):
     selling_price = db.Column(db.Float, nullable=False)
     stock_quantity = db.Column(db.Integer, nullable=False)
 
-     # fetch all records from database 
-    @classmethod
-    def fetch_records(cls):
-        products = cls.query.all()
-        return products
-
-    # fetch records id
-    @classmethod
-    def fetch_by_id(cls,id):
-        record = cls.query.filter_by(id=id)    
-        return record
-
-    # create record 
-    @classmethod
-    def create_record(self):
-        db.session.add(self)
-        db.session.commit()
-
-    # update by id
-    @classmethod
-    def update_by_id(cls,id, name, category, buying_price, selling_price, stock_quantity):
-        record = cls.query.filter_by(id=id).first()
-
-        if record:
-
-            record.name == name
-            record.category == category
-            record.buying_price == buying_price
-            record.selling_price == selling_price
-            record.stock_quantity == stock_quantity
-            db.session.add(record)
-            db.session.commit()
-            return record.name
-        else:
-            return False
-
 class Sale(db.Model):
     __tablename__ = "sales"
 
@@ -65,6 +29,16 @@ class Sale(db.Model):
     product_id = db.Column(db.Integer, nullable=False)
     quantity_sold = db.Column(db.Float, nullable=False)
     date_sold = db.Column(db.DateTime, nullable=False, default=datetime.now)
+
+class User(db.Model):
+    __tablename__ = "users"
+
+    id = db.Column(db.Integer, primary_key=True)
+    first_name = db.Column(db.String, nullable=False)
+    last_name = db.Column(db.String, nullable=False)
+    email = db.Column(db.String, nullable=False, unique=True)
+    password = db.Column(db.String, nullable=False)
+    confirm_password = db.Column(db.String, nullable=False)
 
 
 
@@ -85,16 +59,12 @@ cur = conn.cursor()
 # cur.execute("CREATE TABLE IF NOT EXISTS sales (id serial PRIMARY KEY, product_id INTEGER NOT NULL, quantity_sold NUMERIC NOT NULL, date_sold TIMESTAMP );")
 
 
-@app.route('/base') #displays the base html content
-def base():
-    return render_template('base.html')
-
 @app.route('/')
 def home():
-    username = "Mohamed's I-M-S"
-    users = ['Peter', 'Jane', 'Joe', 'Mark']
-    age  = 25
-    return render_template('index.html', usr=username, usrs=users, age=age)
+    age = 30
+    # super_user = User(id=1, first_name='Mohamed', last_name='Jumale', email='mohamed@qiyaas.com', password='admin1234', confirm_password='admin1234')
+    return render_template('index.html', age=age)
+    
 
 @app.route('/dashboard')
 def dashboard():
@@ -215,7 +185,9 @@ def sales():
 
 @app.route('/users')
 def users():
-    return render_template('users.html')    
+    all_users = User.query.all()
+
+    return render_template('users.html',all_users=all_users)    
 
 @app.route('/users/<int:id>')
 def user_id(id):
