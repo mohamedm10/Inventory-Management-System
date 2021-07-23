@@ -18,7 +18,7 @@
           <div class="col-9" > 
         <!-- Button trigger modal -->
         <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#exampleModal" style="margin-left: 250px;">
-          Add New Item
+          <i class="fa fa-plus"></i> Add New Item
         </button>
         <!-- Add inventory Modal with forms -->
         <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -65,7 +65,7 @@
             </div>
           </div>
         </div>
-        <!-- Add inventory Modal with forms end -->
+        <!-- Add inventory Modal with forms End -->
             
             <!-- inventory table -->
              <!--class = display and id = table_id for datatable plugin -->
@@ -79,9 +79,9 @@
                   <th scope="col">S.P</th>
                   <th scope="col">QUANTITY</th>
                   <th scope="col">CATEGORY</th>
-                  <th scope="col">Sale <span class="fas fa-usd"></span></th>
-                  <th scope="col">Edit <img src="/static/images/pencil.svg" alt="edit"></th>
-                  <th scope="col">Delete <img src="/static/images/trash.svg" alt="delete"></th>
+                  <th scope="col">Sale <i class="fa fa-usd" aria-hidden="true"></i></th>
+                  <th scope="col">Edit <i class="fa fa-edit"></i></th>
+                  <th scope="col">Delete <i class="fa fa-trash"></i></th>
                 </tr>
               </thead>
               <tbody>
@@ -97,7 +97,7 @@
                   <td>
                       <!-- Button to trigger modal -->
                       <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#SaleModal{{i.id}}">
-                        <span class="fas fa-usd"></span>
+                        <i class="fa fa-usd" aria-hidden="true"></i>
                       </button>
                       <!-- Sale Modal -->
                   <div class="modal fade" id="SaleModal{{i.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -132,7 +132,9 @@
                   </td>
                   <td> 
                     <!-- Button to trigger modal -->
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#EditModal{{i.id}}"></button>
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#EditModal{{i.id}}">
+                      <i class="fa fa-edit"></i>
+                    </button>
                       <!-- Edit Modal -->
                       <div class="modal fade" id="EditModal{{i.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog" role="document">
@@ -185,41 +187,9 @@
                   </td>
                   <td>
                     <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#DeleteModal">
-                      <!-- <i class="fa fa-usd" aria-hidden="true"></i> -->
-                      <img src="" alt="del">
-                  </td>
-                </tr>
-                {% endfor %}
-
-              </tbody>
-            </table>
-            <!-- table end -->
-              <!-- Modals -->
-            
-            <!-- Addnew Modal -->
-            <!-- <div class="modal fade" id="AddnewModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-              <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                    </button>
-                  </div>
-                  <div class="modal-body">
-                    <div class="form-group">
-                      <label for="exampleInputPassword1">Data title</label>
-                      <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Enter values here">
-                    </div>
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
-                  </div>
-                </div>
-              </div>
-            </div> -->
-            <!-- Delete Modal -->
+                      <i class="fa fa-trash"></i>
+                      </button>
+                       <!-- Delete Modal -->
             <div class="modal fade" id="DeleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
               <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -240,6 +210,16 @@
               </div>
             </div>
             <!-- Modals end -->
+                  </td>
+                </tr>
+                {% endfor %}
+
+              </tbody>
+            </table>
+            <!-- table end -->
+              <!-- Modals -->
+
+           
             
             </div>
           </div>
