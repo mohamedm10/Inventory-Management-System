@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, redirect, url_for
+from flask import Flask, request, render_template, redirect, url_for, flash, session
 from flask import json , render_template
 from sqlalchemy.sql.elements import Null
 from configs.base_config import Development, Staging
@@ -6,10 +6,11 @@ from werkzeug.utils import redirect
 from flask_sqlalchemy import SQLAlchemy
 import psycopg2
 from datetime import datetime
+from functools import wraps
 
 app = Flask(__name__)
 db = SQLAlchemy(app)
-app.config.from_object(Staging)
+app.config.from_object(Development)
 
 
 
@@ -60,7 +61,29 @@ cur = conn.cursor()
 # cur.execute("CREATE TABLE IF NOT EXISTS sales (id serial PRIMARY KEY, product_id INTEGER NOT NULL, quantity_sold NUMERIC NOT NULL, date_sold TIMESTAMP );")
 
 
+@app.route('/login', methods=['POST','GET'])
+def login():
+    
+    if request.method == 'POST':
+        session.pop('user_id', None) # drops session before request is made
+
+        email = request.form['email']
+        password = request.form['password'] 
+
+        user = User.query.filter_by(email = email).first()
+        if user:
+            if user.password == password:
+                session['user_id'] = user.id
+                return redirect(url_for('home'))
+            flash('Invalid Username or Password') 
+            return redirect(url_for('login'))
+        flash('email does not exist')
+        return redirect(url_for('login'))
+
+    return render_template('login.html')
+
 @app.route('/')
+
 def home():
     age = 30
     # super_user = User(id=1, first_name='Mohamed', last_name='Jumale', email='mohamed@qiyaas.com', password='admin1234', confirm_password='admin1234')
@@ -169,6 +192,21 @@ def edit(id):
 
 
         return render_template('inventories.html')
+
+@app.route('/delete_inventory/<int:id>', methods = ['POST','GET'])
+def delete_inventory(id):
+
+    if request.method == 'GET':
+        return render_template('inventories.html')
+
+    id = request.form['id']
+    
+    record = Product.query.filter_by(id=id).first()
+    
+
+    db.session.delete(record)
+    db.session.commit()
+    return redirect(url_for('inventories'))
 
 #inventory with ID
 @app.route('/inventories/<inventory_id>')
