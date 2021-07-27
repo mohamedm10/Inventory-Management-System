@@ -10,9 +10,9 @@ from functools import wraps
 
 app = Flask(__name__)
 db = SQLAlchemy(app)
-app.config.from_object(Development)
+app.config.from_object(Staging)
 
-
+print("World")
 
 class Product(db.Model):
     __tablename__ = "products"
