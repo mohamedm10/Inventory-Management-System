@@ -10,12 +10,12 @@ from flask_sqlalchemy import SQLAlchemy
 import psycopg2
 from datetime import datetime
 from functools import wraps
-from flask_moment import Moment
+# from flask_moment import Moment
 
 app = Flask(__name__)
 db = SQLAlchemy(app)
 app.config.from_object(Staging)
-moment = Moment(app)
+# moment = Moment(app)
 print("World")
 
 class Product(db.Model):
