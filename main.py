@@ -1,17 +1,21 @@
+from operator import or_
 from flask import Flask, request, render_template, redirect, url_for, flash, session
 from flask import json , render_template
+from sqlalchemy.orm import backref, lazyload
 from sqlalchemy.sql.elements import Null
+from sqlalchemy.sql.functions import func
 from configs.base_config import Development, Staging
 from werkzeug.utils import redirect
-from flask_sqlalchemy import SQLAlchemy
+from flask_sqlalchemy import SQLAlchemy 
 import psycopg2
 from datetime import datetime
 from functools import wraps
+from flask_moment import Moment
 
 app = Flask(__name__)
 db = SQLAlchemy(app)
 app.config.from_object(Staging)
-
+moment = Moment(app)
 print("World")
 
 class Product(db.Model):
@@ -23,14 +27,19 @@ class Product(db.Model):
     buying_price = db.Column(db.Float, nullable=False)
     selling_price = db.Column(db.Float, nullable=False)
     stock_quantity = db.Column(db.Integer, nullable=False)
+    # This is a one to many relationship
+    # A product can have many sales related
+    sale = db.relationship('Sale', backref='product', lazy='dynamic')
 
 class Sale(db.Model):
     __tablename__ = "sales"
 
     id = db.Column(db.Integer, primary_key = True)
-    product_id = db.Column(db.Integer, nullable=False)
+    #product_id = db.Column(db.Integer, nullable=False)
     quantity_sold = db.Column(db.Float, nullable=False)
-    date_sold = db.Column(db.DateTime, nullable=False, default=datetime.now)
+    date_sold = db.Column(db.DateTime, nullable=False, default=datetime.now())
+    # Connect sale to the product that was sold 
+    product_id = db.Column(db.Integer, db.ForeignKey('products.id'))
 
 class User(db.Model):
     __tablename__ = "users"
@@ -41,6 +50,7 @@ class User(db.Model):
     email = db.Column(db.String, nullable=False, unique=True)
     password = db.Column(db.String, nullable=False)
     confirm_password = db.Column(db.String, nullable=False)
+    # reg_date = db.Column(db.DateTime, default=datetime.utcnow())
 
 
 
@@ -48,9 +58,7 @@ class User(db.Model):
 @app.before_first_request
 def create_tables():
     db.create_all()
-    print("hello")
-
-
+    
 
   
 # conn = psycopg2.connect("dbname=kiosk user=postgres port=5433 password=12345") #connection to local db
@@ -92,32 +100,50 @@ def home():
 
 @app.route('/dashboard')
 def dashboard():
-    cur.execute("SELECT COUNT(*) FROM products;")
-    inv = cur.fetchone()
-    cur.execute("SELECT COUNT(*) FROM sales;")
-    sls = cur.fetchone()
-    cur.execute("SELECT category,COUNT(*) FROM products GROUP BY category ;")
-    pie = cur.fetchall()
-    cur.execute("SELECT name,sum(quantity_sold) FROM sales INNER JOIN products ON products.id = sales.product_id GROUP BY name ;")
-    bar = cur.fetchall()
-    print(bar)
+    products = Product.query.count()
 
-    bar_labels = []
-    bar_values = []
-    for b in bar:
-        bar_labels.append(b[0])
-        bar_values.append(int(b[1]))
+    sales = Sale.query.count()
+
+    categories = Product.query.with_entities(Product.category, func.count()).group_by(Product.category).all()
 
     pie_labels = []
     pie_values = []
+    for label, value in categories:
+        pie_labels.append(label)
+        pie_values.append(value)
 
-    for x in pie:
-       pie_labels.append(x[0])
-       pie_values.append(x[1]) 
+    
+    sale_per_item = Sale.query.with_entities(Product.name, func.sum(Sale.quantity_sold)).join(Product).group_by(Product.name).all()
 
-    print(bar_labels)
-    print(bar_values)
-    return render_template('dashboard.html',inv=inv,sls=sls, pie_labels=pie_labels,pie_values=pie_values,bar_labels=bar_labels,bar_values=bar_values)
+    bar_labels = []
+    bar_values = []
+    for label, value in sale_per_item:
+        bar_labels.append(label)
+        bar_values.append(value)
+    
+    # cur.execute("SELECT COUNT(*) FROM products;")
+    # inv = cur.fetchone()
+    # cur.execute("SELECT COUNT(*) FROM sales;")
+    # sls = cur.fetchone()
+    # cur.execute("SELECT category,COUNT(*) FROM products GROUP BY category ;")
+    # pie = cur.fetchall()
+    # cur.execute("SELECT name,sum(quantity_sold) FROM sales INNER JOIN products ON products.id = sales.product_id GROUP BY name ;")
+    # bar = cur.fetchall()
+    # print(bar)
+
+    # bar_labels = []
+    # bar_values = []
+    # for b in bar:
+    #     bar_labels.append(b[0])
+    #     bar_values.append(int(b[1]))
+
+    # pie_labels = []
+    # pie_values = []
+    # for x in categories:
+    #    pie_labels.append(x[0])
+    #    pie_values.append(x[1]) 
+
+    return render_template('dashboard.html',products=products,sales=sales, pie_labels=pie_labels,pie_values=pie_values,bar_labels=bar_labels,bar_values=bar_values)
 
 @app.route('/inventories',methods=['POST','GET'])
 def inventories():
@@ -217,9 +243,8 @@ def single_inventories(inventory_id):
 def sales():
     # cur.execute("SELECT sales.id, product_id, quantity_sold, date_sold, name, selling_price*quantity_sold as total_sales FROM sales INNER JOIN products ON products.id = sales.product_id;")
     # d = cur.fetchall()
-    sales = Sale.query.all()
-
-    print(sales)
+    sales = db.session.query(Product, Sale).join(Sale).all()
+    
     return render_template('sales.html',sales=sales)
 
 @app.route('/users')

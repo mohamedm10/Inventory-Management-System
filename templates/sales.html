@@ -33,15 +33,15 @@
                     </tr>
                 </thead>
                 <tbody>
-                  {% for sale in sales %}
+                  {% for product, sale in sales %}
                   <tr>
                     <!-- <td> {{loop.index}} </td> -->
                     <td> {{sale.id}} </td>
                     <td> {{sale.product_id}} </td>
                     <td> {{sale.quantity_sold}} </td>
-                    <td> {{sale}} </td>
-                    <td> {{sale.date_sold}} </td>
-                    <td> {{sale}} </td>
+                    <td> {{product.selling_price*sale.quantity_sold}} </td>
+                    <td> {{moment(sale.date_sold).fromNow(refresh=True)}} </td>
+                    <td> {{product.name}} </td>
                     
                   </tr>
                   {% endfor %}
@@ -77,5 +77,12 @@
         </div>
       </div>
       <!-- page container end -->
+
+      {% endblock %}
+
+      {% block scripts %}
+
+      {{ super() }}
+      {{ moment.include_moment() }}
 
       {% endblock %}
