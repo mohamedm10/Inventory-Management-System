@@ -144,7 +144,7 @@ def dashboard():
     #    pie_values.append(x[1]) 
 
     return render_template('dashboard.html',products=products,sales=sales, pie_labels=pie_labels,pie_values=pie_values,bar_labels=bar_labels,bar_values=bar_values)
-    
+
 @app.route('/inventories',methods=['POST','GET'])
 def inventories():
     if request.method == "GET":
