@@ -40,7 +40,7 @@
                     <td> {{sale.product_id}} </td>
                     <td> {{sale.quantity_sold}} </td>
                     <td> {{product.selling_price*sale.quantity_sold}} </td>
-                    <td> {{moment(sale.date_sold).fromNow(refresh=True)}} </td>
+                    <td> {{sale.date_sold}} </td>
                     <td> {{product.name}} </td>
                     
                   </tr>
