@@ -1,4 +1,5 @@
 from operator import or_
+from time import gmtime
 from flask import Flask, request, render_template, redirect, url_for, flash, session
 from flask import json , render_template
 from sqlalchemy.orm import backref, lazyload
@@ -9,14 +10,13 @@ from werkzeug.utils import redirect
 from flask_sqlalchemy import SQLAlchemy 
 import psycopg2
 from datetime import datetime
-from functools import wraps
 # from flask_moment import Moment
 
 app = Flask(__name__)
 db = SQLAlchemy(app)
 app.config.from_object(Staging)
 # moment = Moment(app)
-print("World")
+
 
 class Product(db.Model):
     __tablename__ = "products"
@@ -27,8 +27,8 @@ class Product(db.Model):
     buying_price = db.Column(db.Float, nullable=False)
     selling_price = db.Column(db.Float, nullable=False)
     stock_quantity = db.Column(db.Integer, nullable=False)
-    # This is a one to many relationship
-    # A product can have many sales related
+    # This is a one to one relationship
+    # A single sale (row) can relate to one product (row) and vice versa
     sale = db.relationship('Sale', backref='product', lazy='dynamic')
 
 class Sale(db.Model):
@@ -38,7 +38,7 @@ class Sale(db.Model):
     #product_id = db.Column(db.Integer, nullable=False)
     quantity_sold = db.Column(db.Float, nullable=False)
     date_sold = db.Column(db.DateTime, nullable=False, default=datetime.now())
-    # Connect sale to the product that was sold 
+    # Connect sale model to the product model
     product_id = db.Column(db.Integer, db.ForeignKey('products.id'))
 
 class User(db.Model):
@@ -51,8 +51,6 @@ class User(db.Model):
     password = db.Column(db.String, nullable=False)
     confirm_password = db.Column(db.String, nullable=False)
     # reg_date = db.Column(db.DateTime, default=datetime.utcnow())
-
-
 
 # create all tables
 @app.before_first_request
@@ -100,10 +98,11 @@ def home():
 
 @app.route('/dashboard')
 def dashboard():
+    # QUERY FOR PRODUCT MODEL ROW COUNT
     products = Product.query.count()
-
+    # QUERY FOR SALE MODEL ROW COUNT
     sales = Sale.query.count()
-
+    # QUERY FOR COUNTING NUMBER OF OCCURENCE OF EACH CATEGORY AND GROUPING BY CATEGORY ATTRIBUTE IN PRODUCT MODEL
     categories = Product.query.with_entities(Product.category, func.count()).group_by(Product.category).all()
 
     pie_labels = []
@@ -112,7 +111,7 @@ def dashboard():
         pie_labels.append(label)
         pie_values.append(value)
 
-    
+    # QUERY FOR SUMING UP ALL QUANTITY SOLD AND JOINING PRODUCT AND SALE MODELS AND THEN GROUPING BY PRODUCT NAME
     sale_per_item = Sale.query.with_entities(Product.name, func.sum(Sale.quantity_sold)).join(Product).group_by(Product.name).all()
 
     bar_labels = []
@@ -152,7 +151,7 @@ def inventories():
         # x = cur.fetchall()
         # all_products = Product.fetch_records()
         all_products = Product.query.all()
-        print(all_products)
+        
         return render_template('inventories.html', all_products=all_products )
     else:
         name = request.form['name']
@@ -165,8 +164,7 @@ def inventories():
 
         db.session.add(new_product)
         db.session.commit()
-        print(new_product)
-
+        
         # print(n,b,s,q,c)
         # cur.execute("INSERT INTO products (name, stock_quantity, buying_price, selling_price,category) VALUES (%s, %s, %s, %s, %s)", (n,q,b,s,c))
         # conn.commit()
@@ -181,8 +179,6 @@ def make_sale():
         pid = request.form['product_id']
         qt = request.form ['stock_quantity']
 
-        print(pid,qt)
-
         # cur.execute("UPDATE products SET stock_quantity =%s WHERE id= %s ", (qt,pid))
         # cur.execute("INSERT INTO sales (product_id, quantity_sold, date_sold) VALUES (%s,%s,'NOW()')", (pid,qt))
         # conn.commit()
@@ -191,7 +187,6 @@ def make_sale():
         db.session.commit()
         print(item_selected)
     
-
         return redirect(url_for('sales'))
 
 @app.route('/edit_inventory/<int:id>', methods=['POST','GET'])
@@ -209,14 +204,10 @@ def edit(id):
         db.session.add(record)
         db.session.commit()
 
-        print('Record successfully added', record.name)
         # cur.execute('UPDATE products SET name = %s, buying_price = %s, selling_price = %s, stock_quantity = %s, category = %s WHERE products.id = %s ;',(nm,bp,sp,q,c,id))
         # conn.commit()
         return redirect(url_for('inventories'))
     else:
-        record_by_id = Product().fetch_by_id(id=id)
-
-
         return render_template('inventories.html')
 
 @app.route('/delete_inventory/<int:id>', methods = ['POST','GET'])
@@ -228,7 +219,6 @@ def delete_inventory(id):
     id = request.form['id']
     
     record = Product.query.filter_by(id=id).first()
-    
 
     db.session.delete(record)
     db.session.commit()
