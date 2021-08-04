@@ -53,18 +53,22 @@
           </div>
           <div class="row">
             
-            <div class="col mt-4">Visualisation1
+            <div class="col mt-4">
               <canvas id="myChart" width="400" height="400"></canvas>
             </div>
-            <div class="col mt-4">Visualisation2
+            <div class="col mt-4">
               <canvas id="pie-chart" width="200" height="200"></canvas>
             </div>
           </div>
         </div>
       </div>
     </div>
+
+    {% block scripts %}
     <!-- charts scripts -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    {% endblock %}    
+    
     <!-- bar chart -->
     <script>
       var ctx = document.getElementById('myChart').getContext('2d');
@@ -129,3 +133,4 @@
       </script>
       <!-- scripts end -->
 {% endblock %}
+
