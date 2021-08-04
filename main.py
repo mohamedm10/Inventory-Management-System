@@ -14,7 +14,7 @@ from datetime import datetime
 
 app = Flask(__name__)
 db = SQLAlchemy(app)
-app.config.from_object(Development)
+app.config.from_object(Staging)
 # moment = Moment(app)
 
 
