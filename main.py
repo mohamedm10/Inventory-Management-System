@@ -11,11 +11,14 @@ from flask_sqlalchemy import SQLAlchemy
 import psycopg2
 from datetime import datetime
 # from flask_moment import Moment
+from flask_migrate import Migrate
+import os
 
 app = Flask(__name__)
 db = SQLAlchemy(app)
-app.config.from_object(Staging)
+app.config.from_object(Development)
 # moment = Moment(app)
+migrate = Migrate(app, db)
 
 
 class Product(db.Model):
@@ -37,7 +40,7 @@ class Sale(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     #product_id = db.Column(db.Integer, nullable=False)
     quantity_sold = db.Column(db.Float, nullable=False)
-    date_sold = db.Column(db.DateTime, nullable=False, default=datetime.now())
+    date_sold = db.Column(db.DateTime, nullable=False, default=datetime.now().isoformat()[:19])
     # Connect sale model to the product model
     product_id = db.Column(db.Integer, db.ForeignKey('products.id'))
 
@@ -59,8 +62,8 @@ def create_tables():
     
 
   
-# conn = psycopg2.connect("dbname=kiosk user=postgres port=5433 password=12345") #connection to local db
-conn = psycopg2.connect(dbname="d5c04cvapeivr1", host="ec2-79-125-30-28.eu-west-1.compute.amazonaws.com", user="ruusozkswdaiez", port=5432,  password="c9424fa337795052a1500084fa6b4442d12b3977458eeac2bba5a2300964783b") #connection to heroku db
+# conn = psycopg2.connect(dbname=os.environ.get('DATABASE'), user=os.environ.get('POSTGRES_USER'), port=5433, password=os.environ.get('POSTGRES_PASSWORD')) #connection to local db
+conn = psycopg2.connect(dbname=os.environ.get("PROD_DATABASE"), host=os.environ.get("PROD_HOST"), user=os.environ.get("PROD_POSTGRES_USER"), port=5432,  password=os.environ.get("PROD_POSTGRES_PASSWORD")) #connection to heroku db
 cur = conn.cursor()
 
 # cur.execute("CREATE TABLE IF NOT EXISTS products (id serial PRIMARY KEY, name VARCHAR NOT NULL, buying_price NUMERIC NOT NULL, selling_price NUMERIC NOT NULL, stock_quantity NUMERIC NOT NULL, category VARCHAR NOT NULL);")
@@ -119,6 +122,9 @@ def dashboard():
     for label, value in sale_per_item:
         bar_labels.append(label)
         bar_values.append(value)
+    #py to json    
+    bar_labels = json.dumps(bar_labels)
+    bar_values = json.dumps(bar_values)
     
     # cur.execute("SELECT COUNT(*) FROM products;")
     # inv = cur.fetchone()
@@ -278,3 +284,6 @@ def user_name(username):
 @app.route('/stock') #stock
 def stock():
     return render_template('stock.html')
+
+if __name__ == 'main':
+    app.run(debug=True)

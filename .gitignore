@@ -3,3 +3,4 @@ env/
 .env
 sql_queries.txt
 git_commands.txt
+debug.log

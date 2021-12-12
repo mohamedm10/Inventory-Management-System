@@ -75,10 +75,10 @@
       var myChart = new Chart(ctx, {
           type: 'bar',
           data: {
-              labels: {{ bar_labels | tojson}},
+              labels: { bar_labels },
               datasets: [{
                   label: 'Sales per Inventory',
-                  data: {{ bar_values | tojson}},
+                  data: { bar_values },
                   backgroundColor: [
                       'rgba(255, 99, 132, 0.2)',
                       'rgba(54, 162, 235, 0.2)',
@@ -115,11 +115,11 @@
             new Chart(document.getElementById("pie-chart"), {
               type: 'pie',
               data: {
-                labels:  {{ pie_labels | tojson}},
+                labels:  pie_labels[0] ,
                 datasets: [{
                   label: "Portfolio distribution",
                   backgroundColor: ["#3e95cd", "#8e5ea2"],
-                  data: {{ pie_values | tojson}}
+                  data: pie_values[0] 
                   
                 }]
               },
